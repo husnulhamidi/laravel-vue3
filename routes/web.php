@@ -1,18 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Resources\QuestionResource;
+use App\Models\Question;
 Route::get('/', function () {
+    $questions = QuestionResource::collection(
+        Question::with('user')->latest()->paginate(15)
+    );
+    //return $questions;
     return inertia('Questions/index',array(
-        'questions'=> [
-            ['id'=>1, 'title'=> 'Questions 1'],
-            ['id'=>2, 'title'=> 'Questions 2'],
-        ]
+        'questions'=> $questions
     ));
-})->name("questions.index");
+})->name('questions.index');
 
 Route::get('/questions/{id}', function ($id){
     return inertia('Questions/show',[
-        'question' => ['id'=>$id, 'title'=>'Question test '.$id]
+        'question' => ['id'=>$id, 'title'=>'Question '.$id]
     ]);
-})->('questions.show');
+})->name('questions.show');
