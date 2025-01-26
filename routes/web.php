@@ -1,20 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Resources\QuestionResource;
-use App\Models\Question;
-Route::get('/', function () {
-    $questions = QuestionResource::collection(
-        Question::with('user')->latest()->paginate(15)
-    );
-    //return $questions;
-    return inertia('Questions/index',array(
-        'questions'=> $questions
-    ));
+use App\Http\Controllers\QuestionController;
+use Illuminate\Support\Facades\Session;
+
+Route::get('/session', function(){
+    return auth()->user();
 })->name('questions.index');
 
-Route::get('/questions/{id}', function ($id){
-    return inertia('Questions/show',[
-        'question' => ['id'=>$id, 'title'=>'Question '.$id]
-    ]);
-})->name('questions.show');
+Route::get('/clear-session', function(){
+    Session::flush();
+    return "Session Desrtroyed";
+});
+
+Route::get('/', [QuestionController::class,'index'])->name('questions.index');
+
+Route::get('/questions/{question:slug}', [QuestionController::class,'show'])->name('questions.show');

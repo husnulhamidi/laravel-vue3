@@ -121,7 +121,7 @@
 
 <script setup>
 import { Link, Head} from "@inertiajs/vue3";
-import AppLayout from "../../layout/AppLayout.vue";
+import AppLayout from "../../Layout/AppLayout.vue";
 import QuestionSummary from "../../Components/Question/QuestionSummary.vue";
 import Pagination from "../../Components/Pagination.vue";
 
