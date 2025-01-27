@@ -49,7 +49,7 @@
             </div>
             </div>
             <Modal id="question-modal" title="Ask a question" size="large" scrollable>
-                <QuestionForm />
+                <QuestionForm @success="hideModal"/>
             </Modal>
     </AppLayout>
     <!-- <h1>Welcome!</h1>
