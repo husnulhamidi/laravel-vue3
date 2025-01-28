@@ -1,6 +1,19 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 
+
+const props = defineProps({
+    question :{
+        type:Object,
+        required:true
+    }
+})
+
+const formData = {
+    title:props.question.title,
+    body:props.question.body
+}
+
 const form = useForm({
     title:'',
     body:'',
