@@ -43,7 +43,7 @@ const emit = defineEmits(['edit','remove']);
                 <span class="text-muted"> asked <time :datetime="question.created_at.machine">{{question.created_at.human}}</time></span>
             </div>
             </div>
-            <ActionButton @edit="emit('edit', question)" />
+            <ActionButton @edit="emit('edit', question)" @remove="emit('remove', question)" />
         </div>
         </div>
     </li>

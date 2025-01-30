@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Http\Resources\QuestionResource;
 use App\Http\Requests\StoreQuestionRequest;
+use App\Http\Requests\UpdateQuestionRequest;
 use App\Models\Question;
 use Illuminate\Http\Request;
 
@@ -63,9 +64,11 @@ class QuestionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Question $question)
+    public function update(UpdateQuestionRequest $request, Question $question)
     {
-        //
+        $question->update($request->validated());
+
+        return back()->with('success','Question updated successfully.');
     }
 
     /**
@@ -73,6 +76,7 @@ class QuestionController extends Controller
      */
     public function destroy(Question $question)
     {
-        //
+        $question->delete();
+        return back()->with('success','Question deleted successfully.');
     }
 }

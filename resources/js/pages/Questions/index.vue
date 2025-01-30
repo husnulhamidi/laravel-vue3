@@ -13,6 +13,7 @@
                             :key="question.id" 
                             :question="question" 
                             @edit="editQuestion"
+                            @remove="removeQuestion"
                         />
                     </ul>
                 </div>
@@ -53,8 +54,9 @@
                 </div>
             </div>
             </div>
-            <Modal id="question-modal" :title="state.modalTitle" size="large" scrollable>
-                <QuestionForm @success="hideModal"/>
+            <Modal id="question-modal" :title="state.modalTitle" size="large" scrollable @hidden="editing=false">
+                <component :is="editing? EditQuestionForm : CreateQuestionForm" :question="question" @success="hideModal"/>
+                
             </Modal>
     </AppLayout>
     <!-- <h1>Welcome!</h1>
@@ -68,14 +70,15 @@
 </template>
 
 <script setup>
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import * as bootstrap from "bootstrap";
-import { Link, Head} from "@inertiajs/vue3";
+import { Link, Head, router} from "@inertiajs/vue3";
 import AppLayout from "../../Layout/AppLayout.vue";
 import QuestionSummary from "../../Components/Question/QuestionSummary.vue";
 import Pagination from "../../Components/Pagination.vue";
 import Modal from "../../Components/modal.vue";
-import QuestionForm from "../../Components/Question/QuestionForm.vue";
+import CreateQuestionForm from "../../Components/Question/CreateQuestionForm.vue";
+import EditQuestionForm from "../../Components/Question/EditQuestionForm.vue";
 
 defineProps({
     questions:{
@@ -87,6 +90,15 @@ const state = reactive({
     modalRef:null,
     modalTitle:"Ask Quesssstion"
 })
+
+const question = reactive({
+    id:null,
+    title : null, 
+    body:null
+
+})
+
+const editing = ref(false);
 onMounted(() => {
     state.modalRef = new bootstrap.Modal('#question-modal',{
         backdrop:'static',
@@ -96,13 +108,25 @@ onMounted(() => {
 
 const showModal = () => state.modalRef.show();
 const hideModal= () => state.modalRef.hide();
-const editQuestion = (question) => {
+const editQuestion = (payload) => {
+    editing.value = true;
     state.modalTitle = "Edit Question";
+
+    question.id=payload.id;
+    question.title = payload.title;
+    question.body = payload.body;
     showModal();
 }
 const askQuestion = () => {
+    editing.value = false;
     state.modalTitle = "Ask Question";
     showModal();
+}
+
+const removeQuestion = (payload) => {
+    if(confirm("Are you sure you want to delete this question?")){
+        router.delete(route('questions.destroy',payload.id));
+    }
 }
 
 
