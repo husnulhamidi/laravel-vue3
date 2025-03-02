@@ -12,14 +12,22 @@ class QuestionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $filter = $request->query('filter','latest');
         $questions = QuestionResource::collection(
-            Question::with('user')->latest()->paginate(15)
+            Question::with('user')
+            ->when($filter=='mine', function($query){
+                // scopeMine()
+                $query->mine();
+            })
+            ->latest()
+            ->paginate(15)
         );
         //return $questions;
         return inertia('Questions/index',array(
-            'questions'=> $questions
+            'questions'=> $questions,
+            'filter' => $filter
         ));
     }
 

@@ -25,20 +25,7 @@
                     <button class="btn btn-primary" @click="askQuestion" >Ask Question</button>
                 </div>
 
-                <ul class="nav nav-underline flex-column mt-4">
-                    <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Latest</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="#">Unanswered</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="#">Scored</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="#">Mine</a>
-                    </li>
-                </ul>
+                <QuestionFilter :filter="filter"/>
                 <h2 class="fs-5 mt-5">Related Tags</h2>
                 <ul class="tags-list mt-3">
                     <li><a href="#" class="tag mb-2">Javascript</a></li>
@@ -79,12 +66,14 @@ import Pagination from "../../Components/Pagination.vue";
 import Modal from "../../Components/modal.vue";
 import CreateQuestionForm from "../../Components/Question/CreateQuestionForm.vue";
 import EditQuestionForm from "../../Components/Question/EditQuestionForm.vue";
+import QuestionFilter from "../../Components/Question/QuestionFilter.vue";
 
 defineProps({
     questions:{
         type:Object,
         required:true
-    }
+    },
+    filter : String
 })
 const state = reactive({
     modalRef:null,
@@ -125,7 +114,10 @@ const askQuestion = () => {
 
 const removeQuestion = (payload) => {
     if(confirm("Are you sure you want to delete this question?")){
-        router.delete(route('questions.destroy',payload.id));
+        router.delete(route('questions.destroy',payload.id), {
+            // this function to keep scroll on position, if question deleted on the bottom of the page so it will not scroll to top
+            preserveScroll:true
+        } );
     }
 }
 
