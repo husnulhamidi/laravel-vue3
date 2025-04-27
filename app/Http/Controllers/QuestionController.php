@@ -22,6 +22,10 @@ class QuestionController extends Controller
                 // scopeMine()
                 $query->mine();
             })
+            ->when($filter=='unanswered', function($query){
+                $query->has('answers','=',0);
+            })
+            
             ->latest()
             ->paginate(15)
         );
